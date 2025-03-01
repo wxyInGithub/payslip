@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工资条列表</title>
+    <link rel="stylesheet" href="./css/list.css">
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(()=>{
+            setTimeout(()=>{
+                $("#load").removeClass("load");
+                $("#load").addClass("end-load");
+            }, 2000);
+            $(".card").click(()=>{
+                console.log("I'm clicked");
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="load" class="load">
+        <div class="loader"></div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <div class="card_header">
+                <span>2025年1月</span>
+            </div>
+            <div class="card_body">
+                <h2>点我马上查看(づ￣ 3￣)づ☞</h2>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card_header">
+                <span>2025年1月</span>
+            </div>
+            <div class="card_body">
+                <h2>点我马上查看(づ￣ 3￣)づ☞</h2>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card_header">
+                <span>2025年1月</span>
+            </div>
+            <div class="card_body">
+                <h2>点我马上查看(づ￣ 3￣)づ☞</h2>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card_header">
+                <span>2025年1月</span>
+            </div>
+            <div class="card_body">
+                <h2>点我马上查看(づ￣ 3￣)づ☞</h2>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

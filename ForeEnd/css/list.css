@@ -1,0 +1,103 @@
+/* The layout */
+html{
+    height: 100%;
+}
+
+body{
+    height: 100%;
+    margin: 0;
+}
+
+/* Content */
+.container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.card{
+    position: relative;
+    margin-top: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(28,111,255,0.5);
+    width: 95%;
+    height: 100px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: initCard 2s ease forwards;
+}
+.card:nth-child(1){animation-delay: 0.1s;}
+.card:nth-child(2){animation-delay: 0.3s;}
+.card:nth-child(3){animation-delay: 0.5s;}
+.card:nth-child(4){animation-delay: 0.7s;}
+
+.card_header{
+    letter-spacing: 10px;
+    font-weight: bold;
+    width: 100%;
+    height: 30%;
+    border-bottom: 1px solid rgba(128, 126, 126, 0.5);
+}
+
+.card_body{
+    letter-spacing: 3px;
+    width: 100%;
+    height: 70%;
+}
+
+@keyframes initCard {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* load animation */
+.loader {
+    width: fit-content;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 30px;
+    background: radial-gradient(circle closest-side,#000 94%,#0000) right/calc(200% - 1em) 100%;
+    animation: l24 1s infinite alternate linear;
+}
+.loader::before {
+    content: "Loading...";
+    line-height: 1em;
+    color: #0000;
+    background: inherit;
+    background-image: radial-gradient(circle closest-side,#fff 94%,#000);
+    -webkit-background-clip:text;
+    background-clip:text;
+}
+@keyframes l24{
+    100%{background-position: left}
+}
+
+.load{
+    overflow: hidden;
+    background-color: white;
+    display: grid;
+    place-items: center;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(28,111,255,0.5);
+    animation: load 2s;
+    animation-fill-mode:forwards;
+}
+@keyframes load {
+    from{height: 100%;}
+    to{height: 0%;}
+}
+
+.end-load{
+    display: none;
+}
