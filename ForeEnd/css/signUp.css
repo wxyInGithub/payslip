@@ -52,9 +52,11 @@ body{
     width: 100%;
     line-height: 200%;
     border-style: none;
-    border-bottom: 1px solid rgba(192,192,192,1);
+    border-radius: 5px;
 }
-
+::placeholder{
+    color: rgba(200, 200, 200, 0.5);
+}
 label{
     font-size: 18px;
 }

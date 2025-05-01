@@ -23,6 +23,6 @@ const app = express();
 // });
 app.use(express.static(path.join(__dirname, "ForeEnd")))
 app.use(router);
-app.listen(5000, "127.0.0.1", (req, res, next)=>{
-    console.log("server is running on 127.0.0.1:5000\n");
+app.listen(5000, "0.0.0.0", (req, res, next)=>{
+    console.log("server is running on 0.0.0.0:5000\n");
 });

@@ -5,11 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="./js/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="./css/payslip.css">
+    <script>
+        $(document).ready(()=>{
+            var a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            for(let i in a)
+            {
+                let content = `    
+                    <div class="content">
+                        <div class="content_index">${i}</div>
+                        <div class="content_text">214122</div>
+                    </div>
+                `; 
+                $("hr").after(content);
+            }
+        });
+    </script>
 </head>
 <body>
-    <div class="test">
-        <div class="loader"></div>
-    </div>
+    <h2 class="title">
+        2025年1月工资条
+    </h2>
+    <hr>
 </body>
 </html>
