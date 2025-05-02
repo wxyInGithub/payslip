@@ -52,7 +52,10 @@ body{
     width: 100%;
     line-height: 200%;
     border-style: none;
-    border-radius: 5px;
+    border-radius: 5px
+}
+::placeholder{
+    color: rgb(165, 161, 161);
 }
 
 label{
@@ -61,9 +64,6 @@ label{
 
 input[type=checkbox]{
     visibility: hidden;
-}
-::placeholder{
-    color: rgba(200, 200, 200, 0.5);
 }
 #rememberPwd+label{
     position: relative;

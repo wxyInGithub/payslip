@@ -8,7 +8,13 @@
     <script src="./js/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="./css/payslip.css">
     <script>
+        const title = `
+            <h2 class="title">
+                ${localStorage.getItem("year")}年${localStorage.getItem("month")}月工资条
+            </h2>
+        `;
         $(document).ready(()=>{
+            $("hr").before(title);
             var a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             for(let i in a)
             {
@@ -24,9 +30,6 @@
     </script>
 </head>
 <body>
-    <h2 class="title">
-        2025年1月工资条
-    </h2>
     <hr>
 </body>
 </html>

@@ -4,17 +4,17 @@ const bodyParser = require("body-parser");
 const router = require("./router.js");
 
 const app = express();
-// app.all("*", (req, res, next)=>{
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Content-Type");
-//     res.header("Access-Control-Allow-Methods", "DELETE, PUT, POST, GET, OPTIONS");
-//     if(req.method.toLowerCase() == "options")
-//         res.send(200);
-//     else
-//         next();
-// });
-// app.use(bodyParser.urlencoded({extends: false}));
-// app.use(bodyParser.json());
+app.all("*", (req, res, next)=>{
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    res.header("Access-Control-Allow-Methods", "DELETE, PUT, POST, GET, OPTIONS");
+    if(req.method.toLowerCase() == "options")
+        res.send(200);
+    else
+        next();
+});
+app.use(bodyParser.urlencoded({extends: false}));
+app.use(bodyParser.json());
 // app.use((req, res, next)=>{
 //     console.log("Someone requested server");
 //     console.log("request url:", req.url);

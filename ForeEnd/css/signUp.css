@@ -52,11 +52,12 @@ body{
     width: 100%;
     line-height: 200%;
     border-style: none;
-    border-radius: 5px;
+    border-radius: 5px
 }
 ::placeholder{
-    color: rgba(200, 200, 200, 0.5);
+    color: rgb(165, 161, 161);
 }
+
 label{
     font-size: 18px;
 }

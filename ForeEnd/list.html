@@ -13,8 +13,44 @@
                 $("#load").removeClass("load");
                 $("#load").addClass("end-load");
             }, 2000);
-            $(".card").click(()=>{
-                window.location.href = "/payslip.html"
+            const date = new Date();
+            const month = date.getMonth()+1;
+            const year = date.getFullYear();
+            for(let i=1;i<=12;++i)
+            {
+                let card = `
+                    <div class="card">
+                        <div class="card_header">
+                            <span class="card_header_font">${year-1}年${i}月</span>
+                        </div>
+                        <div class="card_body">
+                            <h2>您的工资条请查收</h2>
+                    </div>
+                `;
+                $(".container").prepend(card);
+            }
+            for(let i=1;i<=month;++i)
+            {
+                let card = `
+                    <div class="card">
+                        <div class="card_header">
+                            <span class="card_header_font">${year}年${i}月</span>
+                        </div>
+                        <div class="card_body">
+                            <h2>您的工资条请查收</h2>
+                    </div>
+                `;
+                $(".container").prepend(card);
+            }
+            $(".container").each((index)=>{
+                $(this).css("animation-delay", `${(index*2+1)/10}s`);
+            });
+            $('div.card').click(function() {
+                const time = $(this).find('span.card_header_font').text();
+                const match = time.match(/(\d+)年(\d+)月/);
+                localStorage.setItem("year", match[1]);
+                localStorage.setItem("month", match[2]);
+                window.location.href = "/payslip.html";
             });
         });
     </script>
@@ -24,38 +60,6 @@
         <div class="loader"></div>
     </div>
     <div class="container">
-        <div class="card">
-            <div class="card_header">
-                <span class="card_header_font">2025年1月</span>
-            </div>
-            <div class="card_body">
-                <h2>您的工资条请查收</h2>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card_header">
-                <span class="card_header_font">2025年1月</span>
-            </div>
-            <div class="card_body">
-                <h2>您的工资条请查收</h2>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card_header">
-                <span class="card_header_font">2025年1月</span>
-            </div>
-            <div class="card_body">
-                <h2>您的工资条请查收</h2>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card_header">
-                <span class="card_header_font">2025年1月</span>
-            </div>
-            <div class="card_body">
-                <h2>您的工资条请查收</h2>
-            </div>
-        </div>
     </div>
 </body>
 </html>
