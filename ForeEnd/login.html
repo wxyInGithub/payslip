@@ -21,10 +21,9 @@
                     type:"post", 
                     data:{
                         "id":id, 
-                        "password":password
                     }, 
                     success:(result)=>{
-                        if(result){
+                        if(result==password){
                             localStorage.setItem("id", id);
                             $("#load").removeClass("before-load");
                             $("#load").addClass("load");

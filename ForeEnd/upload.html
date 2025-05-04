@@ -5,25 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>上传工资</title>
-    <style>
-        html{
-            height: 100%;
-        }
-        body{
-            display: grid;
-            place-items: center;
-            height: 100%;
-        }
-        input{
-            width: 100%;
-            height: 100%;
-            font-size: 100px;
-        }
-    </style>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="./css/upload.css">
+    <script>
+        $(document).ready(function(){
+            $(".submit").click(()=>{
+                const file = $(".file")[0].files[0];
+                const date = $(".time").val();
+                if(!file || !date){
+                    alert("缺少excel文件或时间!");
+                    return;
+                }
+                const form = new FormData();
+                form.append("file", file);
+                form.append("date", date);
+                $.ajax({
+                    url:"http://localhost:5000/wage", 
+                    type:"post", 
+                    data:form, 
+                    processData: false, 
+                    contentType : false, 
+                    success:(response)=>{
+                        window.location.href = "/success.html";
+                    }, 
+                    error:()=>{
+                        alert("上传失败");
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
-    <form action="" method="post">
-        <input type="file" name="xlsx" id="xlsx">
-    </form>
+    <div class="container">
+        <div class="card">
+            <form action="" method="post">
+                <input class="time" type="month">
+                <input class="file" type="file" accept=".xlsx, .xls" id="xlsx">
+            </form>
+        </div>
+        <button class="submit">
+            点我上传工资
+        </button>
+    </div>
 </body>
 </html>
