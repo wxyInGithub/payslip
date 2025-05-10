@@ -40,7 +40,6 @@ function multipleInsert(data)
     {
         let str = `INSERT INTO [dbo].[Payslip_Wage] VALUES (
         '${obj["NO."]}', 
-        '${obj["时间"]}', 
         '${obj["部门"]}', 
         '${obj["班组"]}', 
         '${obj["工种"]}', 
@@ -64,9 +63,10 @@ function multipleInsert(data)
         '${obj["-其它"]}', 
         '${obj["-小计"]}', 
         '${obj["实发工资"]}', 
+        '${obj["身份证号"]}', 
         '${obj["date"]}'
         );`
-        code += str
+        code += str;
     }
     return code;
 }
@@ -84,10 +84,43 @@ router.get("/upload", (req, res)=>{
 });
 
 router.post("/login", (req, res)=>{
-    const code = `SELECT password FROM [dbo].[Payslip_Users] WHERE 'EmpID'='${req.body.id}'`;
+    const code = `SELECT password FROM [dbo].[Payslip_Users] WHERE ID='${req.body.id}'`;
     mssqlQuery(code, (result)=>{
-        res.send(result[0]);
+        res.send(result[0].password);
     })
+});
+
+router.post("/signUp", (req, res)=>{
+    const code = `SELECT * FROM [dbo].[Payslip_Users] WHERE ID='${req.body.id}'`;
+    mssqlQuery(code, (isExist)=>{
+        if(isExist.length){
+            res.send("0");
+        }
+        else{
+            const exec = `INSERT INTO [dbo].[Payslip_Users] VALUES('${req.body.id}', '${req.body.name}', '${req.body.password}')`;
+            try{
+                mssqlQuery(exec, (result)=>{
+                    res.send("1");
+                });
+            }catch(err){
+                console.log(err.message);
+                res.status(404).send("0");
+            }
+        }
+    })
+});
+
+router.post("/payslip", (req, res)=>{
+    const code = `SELECT * FROM [dbo].[Payslip_Wage] WHERE 身份证号='${req.body.id}' and date='${req.body.date}'`;
+    try{
+        mssqlQuery(code, (result)=>{
+            if(result.length){delete result[0]["身份证号"];delete result[0]["date"];}
+            res.send(result[0]);
+        });
+    }catch(err){
+        console.log(err.message);
+        res.status(404).json({error:err.message});
+    }
 });
 
 router.post("/wage", upload.single("file"), (req, res)=>{
@@ -113,13 +146,27 @@ router.post("/wage", upload.single("file"), (req, res)=>{
         const date = req.body.date;
         let data = xlsx.utils.sheet_to_json(worksheet, {raw:false, defval: ""});
         for(let obj of data)    obj["date"] = date;
-        mssqlQuery(multipleInsert(data), (result)=>{
-            console.log("上传成功");
-            res.json({
-                success: true,
-                message: '文件处理成功'
-            });
-        })
+        const check = `SELECT * FROM [dbo].[Payslip_Wage] WHERE date='${date}'`;
+        mssqlQuery(check, (isExist)=>{
+            if(isExist.length){
+                mssqlQuery(`DELETE FROM [dbo].[Payslip_Wage] WHERE date='${date}'`, ()=>{
+                    mssqlQuery(multipleInsert(data), ()=>{
+                        res.json({
+                            success:true, 
+                            message:"文件处理成功"
+                        })
+                    })
+                });
+            }
+            else{
+                mssqlQuery(multipleInsert(data), ()=>{
+                    res.json({
+                        success: true,
+                        message: '文件处理成功'
+                    });
+                })
+            }
+        });
         // 返回处理后的数据
     } catch (error) {
         console.error('处理Excel文件出错:', error);

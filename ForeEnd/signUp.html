@@ -17,9 +17,18 @@
                     url:"http://localhost:5000/signUp", 
                     type:"post", 
                     data:{"id":id, "name":name, "password":password}, 
-                    success:()=>{
-                        alert("注册成功");
-                        window.location.href = "/";
+                    success:(result)=>{
+                        console.log(result);
+                        if(result=="1"){
+                            alert("注册成功");
+                            window.location.href = "/";
+                        }
+                        else{
+                            alert("该账户已存在!\n请检查身份证号是否填写错误");
+                        }
+                    }, 
+                    error:()=>{
+                        alert("服务器后端炸了X_X\n请联系开发人员:(");
                     }
                 });
             });
@@ -35,8 +44,8 @@
             <div class="card_body">
                 <h1>注&nbsp;&nbsp;册</h1>
                 <form action="/" method="post">
-                    <label for="id">工号</label><br><br>
-                    <input class="info id" type="text" placeholder="请输入工号">
+                    <label for="id">身份证号</label><br><br>
+                    <input class="info id" type="text" placeholder="请输入身份证号">
                     <br><br>
                     <label for="name">姓名</label><br><br>
                     <input class="info name" type="text" placeholder="请输入姓名">

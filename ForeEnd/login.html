@@ -20,7 +20,7 @@
                     url:"http://localhost:5000/login", 
                     type:"post", 
                     data:{
-                        "id":id, 
+                        "id":id
                     }, 
                     success:(result)=>{
                         if(result==password){
@@ -32,7 +32,7 @@
                             }, 2000);
                         }
                         else{
-                            alert("登录失败，请检查工号或密码是否有误");
+                            alert("登录失败，请检查身份证号或密码是否有误");
                         }
                     }
                 });
@@ -50,8 +50,8 @@
             <div class="card_body">
                 <h1>登&nbsp;&nbsp;录</h1>
                 <form action="/" method="post">
-                    <label for="name">工号</label><br><br>
-                    <input class="info id" type="text" placeholder="请输入工号">
+                    <label for="name">身份证号</label><br><br>
+                    <input class="info id" type="text" placeholder="请输入身份证号">
                     <br><br>
                     <label for="password">密码</label><br><br>
                     <input class="info password" type="password" placeholder="请输入密码">

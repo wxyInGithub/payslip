@@ -8,28 +8,71 @@
     <script src="./js/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="./css/payslip.css">
     <script>
+        const year = localStorage.getItem("year");
+        const month = localStorage.getItem("month");
+        function formatYearMonth(year, month) {
+            // 确保月份是两位数
+            const formattedMonth = month < 10 ? `0${month}` : month;
+            return `${year}-${formattedMonth}`;
+        }
         const title = `
             <h2 class="title">
-                ${localStorage.getItem("year")}年${localStorage.getItem("month")}月工资条
+                ${year}年${month}月工资条
             </h2>
         `;
         $(document).ready(()=>{
-            $("hr").before(title);
-            var a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-            for(let i in a)
-            {
-                let content = `    
-                    <div class="content">
-                        <div class="content_index">${i}</div>
-                        <div class="content_text">214122</div>
-                    </div>
-                `; 
-                $("hr").after(content);
-            }
+            $("body").before(title);
+            $.ajax({
+                url:"http://localhost:5000/payslip", 
+                type:"post", 
+                data:{
+                    date:formatYearMonth(year, month), 
+                    id:localStorage.getItem("id")
+                }, 
+                success:(result)=>{
+                    if(result)
+                    {
+                        const realWage = `
+                            <div class="content">
+                                <div class="content_index">实发工资</div>
+                                <div class="content_text">${result["实发工资"]}</div>
+                            </div>
+                        `;
+                        $(".basic").append(realWage);
+                        delete result["实发工资"];
+                        Object.keys(result).forEach(key=>{
+                            let content = `    
+                                <div class="content">
+                                    <div class="content_index">${key}</div>
+                                    <div class="content_text">${result[key]}</div>
+                                </div>
+                            `; 
+                            $(".others").append(content);
+                        });
+                    }
+                    else{
+                        const noneData = `
+                            <div>
+                                <h2>暂无数据</h2>
+                            </div>
+                        `;
+                        $(".basic").append(noneData);
+                        $(".others").append(noneData);
+                    }
+                }, 
+                error:()=>{
+                    alert("服务器后端炸了X_X\n请联系开发人员:(");
+                }
+            });
         });
     </script>
 </head>
 <body>
-    <hr>
+    <div class="basic card">
+        <h3>基本项目</h3>
+    </div>
+    <div class="others card">
+        <h3>其他明细</h3>
+    </div>
 </body>
 </html>
