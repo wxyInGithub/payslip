@@ -7,12 +7,20 @@
     <title>登录</title>
     <link rel="stylesheet" href="./css/login.css">
     <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
     <script>
         $(document).ready(function(){
             $("#rememberPwd+label").click(function(){
                 $(this).toggleClass("unchecked");
                 $(this).toggleClass("checked");
             });
+            const identification = $.cookie("identification");
+            const defaultPwd = $.cookie("defaultPwd");
+            if(identification)
+            {
+                $(".id").val(identification);
+                $(".password").val(defaultPwd);
+            }
             $(".login").click(()=>{
                 const id = $(".id").val();
                 const password = $(".password").val();
@@ -24,6 +32,15 @@
                     }, 
                     success:(result)=>{
                         if(result==password){
+                            if($("#rememberPwd+label").attr("class")=="checked")
+                            {
+                                $.cookie("identification", id, {expires:60, path:"/"});
+                                $.cookie("defaultPwd", password, {expires:60, path:"/"});
+                            }
+                            else{
+                                $.removeCookie("identification", {path:"/"});
+                                $.removeCookie("defaultPwd", {path:"/"});
+                            }
                             localStorage.setItem("id", id);
                             $("#load").removeClass("before-load");
                             $("#load").addClass("load");
