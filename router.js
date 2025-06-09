@@ -85,9 +85,20 @@ router.get("/upload", (req, res)=>{
 
 router.post("/login", (req, res)=>{
     const code = `SELECT password FROM [dbo].[Payslip_Users] WHERE ID='${req.body.id}'`;
-    mssqlQuery(code, (result)=>{
-        res.send(result[0].password);
-    })
+    try{
+        mssqlQuery(code, (result)=>{
+            try{
+                if(result[0]!={}&&result!=[])    res.send(result[0].password);
+                else    res.status(404).send(err.message);
+            }catch(err)
+            {
+                res.status(404).send(err.message);
+            }
+        })
+    } catch(err)
+    {
+        res.status(404).send(err.message);
+    }
 });
 
 router.post("/signUp", (req, res)=>{
