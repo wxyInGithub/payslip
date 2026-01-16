@@ -9,10 +9,6 @@
     <script src="./js/jquery-3.7.1.min.js"></script>
     <script>
         $(document).ready(()=>{
-            setTimeout(()=>{
-                $("#load").removeClass("load");
-                $("#load").addClass("end-load");
-            }, 2000);
             const date = new Date();
             const month = date.getMonth()+1;
             const year = date.getFullYear();
@@ -42,9 +38,6 @@
                 `;
                 $(".container").prepend(card);
             }
-            $(".container").each((index)=>{
-                $(this).css("animation-delay", `${(index*2+1)/10}s`);
-            });
             $('div.card').click(function() {
                 const time = $(this).find('span.card_header_font').text();
                 const match = time.match(/(\d+)年(\d+)月/);
@@ -56,9 +49,6 @@
     </script>
 </head>
 <body>
-    <div id="load" class="load">
-        <div class="loader"></div>
-    </div>
     <div class="container">
     </div>
 </body>
