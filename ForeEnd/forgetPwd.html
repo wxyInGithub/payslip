@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
 
 <head>
@@ -8,35 +7,36 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <title>注册</title>
-    <link rel="stylesheet" href="./css/signUp.css">
+    <title>忘记密码</title>
+    <link rel="stylesheet" href="./css/forgetPwd.css">
     <script src="./js/jquery-3.7.1.min.js"></script>
     <script>
-        $(document).ready(() => {
-            $(".signup-btn").click(() => {
+        $(document).ready(function () {
+            $(".reset-btn").click(() => {
                 const id = $(".id").val();
-                const name = $(".name").val();
                 const password = $(".password").val();
-                if (id == "" || name == "" || password == "") {
-                    alert("身份证号、姓名或密码不能为空!");
+                if (id == "" || password == "") {
+                    alert("身份证号或新密码不能为空!");
                     return;
                 }
                 $.ajax({
-                    url: "http://www.dony.cn:5000/signUp",
+                    url: "http://www.dony.cn:5000/resetPassword",
                     type: "post",
-                    data: { "id": id, "name": name, "password": password },
+                    data: {
+                        "id": id,
+                        "password": password
+                    },
                     success: (result) => {
-                        console.log(result);
                         if (result == "1") {
-                            alert("注册成功");
-                            window.location.href = "/";
+                            alert("密码重置成功，请重新登录");
+                            window.location.href = "/login.html";
                         }
                         else {
-                            alert("该账户已存在!\n请检查身份证号是否填写错误");
+                            alert("密码重置失败，请检查身份证号是否正确");
                         }
                     },
                     error: () => {
-                        alert("服务器后端炸了X_X\n请联系开发人员:(");
+                        alert("服务器错误，请稍后重试");
                     }
                 });
             });
@@ -53,7 +53,7 @@
         <div class="container">
             <div class="card">
                 <div class="card_body">
-                    <h1 class="login-title">注册</h1>
+                    <h1 class="login-title">忘记密码</h1>
 
                     <form action="/" method="post" class="login-form">
                         <div class="form-group">
@@ -62,24 +62,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="name">姓名</label>
-                            <input class="info name" type="text" id="name" placeholder="请输入姓名">
+                            <label for="password">新密码</label>
+                            <input class="info password" type="password" id="password" placeholder="请输入新密码">
                         </div>
 
-                        <div class="form-group">
-                            <label for="password">密码</label>
-                            <input class="info password" type="password" id="password" placeholder="请输入密码">
-                        </div>
-
-                        <button type="button" class="signup-btn">注册</button>
+                        <button type="button" class="reset-btn">重置密码</button>
                     </form>
                 </div>
             </div>
         </div>
 
         <div class="footer">
-            <span class="footer-text">已有账号?</span>
-            <a class="login-link" href="./login.html">立即登录</a>
+            <span class="footer-text">记得密码了?</span>
+            <a class="login-link" href="./login.html">返回登录</a>
         </div>
     </div>
 </body>

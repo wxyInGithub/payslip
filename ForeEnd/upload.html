@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,11 @@
     <script src="./js/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="./css/upload.css">
     <script>
-        $(document).ready(function(){
-            $(".submit").click(()=>{
+        $(document).ready(function () {
+            $(".submit").click(() => {
                 const file = $(".file")[0].files[0];
                 const date = $(".time").val();
-                if(!file || !date){
+                if (!file || !date) {
                     alert("缺少excel文件或时间!");
                     return;
                 }
@@ -20,15 +21,15 @@
                 form.append("file", file);
                 form.append("date", date);
                 $.ajax({
-                    url:"http://www.dony.cn:5000/wage", 
-                    type:"post", 
-                    data:form, 
-                    processData: false, 
-                    contentType : false, 
-                    success:(response)=>{
+                    url: "http://www.dony.cn:5000/wage",
+                    type: "post",
+                    data: form,
+                    processData: false,
+                    contentType: false,
+                    success: (response) => {
                         window.location.href = "/success.html";
-                    }, 
-                    error:()=>{
+                    },
+                    error: () => {
                         alert("上传失败");
                     }
                 });
@@ -36,6 +37,7 @@
         });
     </script>
 </head>
+
 <body>
     <div class="container">
         <div class="card">
@@ -49,4 +51,5 @@
         </button>
     </div>
 </body>
+
 </html>
