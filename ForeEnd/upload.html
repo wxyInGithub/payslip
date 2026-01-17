@@ -5,21 +5,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>上传工资</title>
-    <script src="./js/jquery-3.7.1.min.js"></script>
+    <title>上传工资表</title>
     <link rel="stylesheet" href="./css/upload.css">
+    <script src="./js/jquery-3.7.1.min.js"></script>
     <script>
         $(document).ready(function () {
-            $(".submit").click(() => {
-                const file = $(".file")[0].files[0];
-                const date = $(".time").val();
-                if (!file || !date) {
-                    alert("缺少excel文件或时间!");
+            // File input change event
+            $(".file-input").change(function () {
+                const fileName = $(this).val().split('\\').pop();
+                if (fileName) {
+                    $(".file-display-name").text(fileName);
+                    $(".file-input-wrapper").addClass("has-file");
+                    $(".file-size-info").show();
+                    const file = this.files[0];
+                    if (file) {
+                        const size = (file.size / 1024 / 1024).toFixed(2);
+                        $(".file-size").text(size + " MB");
+                    }
+                } else {
+                    $(".file-display-name").text("未选择文件");
+                    $(".file-input-wrapper").removeClass("has-file");
+                    $(".file-size-info").hide();
+                }
+            });
+
+            // Submit button click
+            $(".upload-btn").click(() => {
+                const file = $(".file-input")[0].files[0];
+                const date = $(".time-input").val();
+
+                if (!file) {
+                    alert("请选择Excel文件!");
                     return;
                 }
+
+                if (!date) {
+                    alert("请选择工资月份!");
+                    return;
+                }
+
                 const form = new FormData();
                 form.append("file", file);
                 form.append("date", date);
+
+                $(".upload-btn").prop("disabled", true).text("上传中...");
+
                 $.ajax({
                     url: "http://www.dony.cn:5000/wage",
                     type: "post",
@@ -30,7 +60,8 @@
                         window.location.href = "/success.html";
                     },
                     error: () => {
-                        alert("上传失败");
+                        alert("上传失败，请稍后重试");
+                        $(".upload-btn").prop("disabled", false).text("上传工资表");
                     }
                 });
             });
@@ -39,16 +70,73 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="card">
-            <form action="" method="post">
-                <input class="time" type="month">
-                <input class="file" type="file" accept=".xlsx, .xls" id="xlsx">
-            </form>
+    <div class="page-wrapper">
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="top-bar">
+                <h1 class="page-title">上传工资表</h1>
+                <p class="page-subtitle">导入新的工资数据到系统</p>
+            </header>
+
+            <div class="content-area">
+                <div class="upload-container">
+                    <form class="upload-form">
+                        <!-- Date Selection -->
+                        <div class="form-section">
+                            <h3 class="section-title">1. 选择工资月份</h3>
+                            <div class="date-wrapper">
+                                <input class="time-input" type="month" required>
+                                <span class="date-hint">选择要上传工资数据的月份</span>
+                            </div>
+                        </div>
+
+                        <!-- File Upload -->
+                        <div class="form-section">
+                            <h3 class="section-title">2. 选择文件</h3>
+                            <div class="file-input-wrapper">
+                                <input class="file-input" type="file" accept=".xlsx, .xls, .csv">
+                                <div class="file-input-content">
+                                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                    <p class="file-prompt">点击选择或拖拽文件到此</p>
+                                    <p class="file-formats">支持: .xlsx, .xls, .csv</p>
+                                </div>
+                            </div>
+                            <div class="file-info">
+                                <p class="file-display-name">未选择文件</p>
+                                <div class="file-size-info" style="display: none;">
+                                    <span>文件大小: <span class="file-size">0 MB</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="form-section">
+                            <button type="button" class="upload-btn">上传工资表</button>
+                            <a href="./list.html" class="cancel-btn">取消</a>
+                        </div>
+                    </form>
+
+                    <!-- Tips Section -->
+                    <div class="tips-section">
+                        <h3>上传提示</h3>
+                        <ul class="tips-list">
+                            <li>Excel 表中需包含以下列: NO.<i style="color: grey;">(注意右下有一点)</i>
+                                、部门、班组、工种、工号、姓名、入厂日期、基本工资、工龄工资、职务工资、技能工资、岗位补贴、出勤时间、出勤天数、出勤工资、绩效工资、奖金、小计、-保险金、-公积金、-所得税、-其它、
+                                -小计<i style="color: grey;">(注意有减号)</i>、实发工资、身份证号
+                            </li>
+                            <li>确保日期格式正确（YYYY-MM-DD）</li>
+                            <li>请不要修改原始模板的列结构</li>
+                            <li>如上传失败，请检查文件格式和数据完整性</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button class="submit">
-            点我上传工资
-        </button>
     </div>
 </body>
 
