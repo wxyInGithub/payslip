@@ -71,6 +71,19 @@ function multipleInsert(data)
     return code;
 }
 
+function isAccountExist(id, callback)
+{
+    const code = `SELECT * FROM [dbo].[Payslip_Users] WHERE ID='${id}'`;
+    mssqlQuery(code, (isExist)=>{
+        if(isExist.length){
+            callback(true);
+        }
+        else{
+            callback(false);
+        }
+    });
+}
+
 const upload = multer({storage:multer.memoryStorage()});
 
 router.get("/", (req, res)=>{
@@ -84,6 +97,10 @@ router.get("/upload", (req, res)=>{
 });
 
 router.post("/login", (req, res)=>{
+    isAccountExist(req.body.id, (exist)=>{
+        if(exist == false)
+            return res.send("id_error");
+    });
     const code = `SELECT password FROM [dbo].[Payslip_Users] WHERE ID='${req.body.id}'`;
     try{
         mssqlQuery(code, (result)=>{
@@ -92,6 +109,7 @@ router.post("/login", (req, res)=>{
                 else    res.status(404).send(err.message);
             }catch(err)
             {
+                console.log(err.message);
                 res.status(404).send(err.message);
             }
         })
@@ -101,24 +119,47 @@ router.post("/login", (req, res)=>{
     }
 });
 
+router.post("/resetPassword", (req, res)=>{
+    isAccountExist(req.body.id, (exist)=>{
+        if(exist == false)
+            return res.send("id_error");
+    });
+    const code = `UPDATE [dbo].[Payslip_Users] SET password='${req.body.password}' WHERE ID='${req.body.id}'`;
+    try{
+        mssqlQuery(code, (result)=>{
+            res.send("1");
+        });
+    }catch(err){
+        console.log(err.message);
+        res.status(404).send("0");
+    }
+});
+
 router.post("/signUp", (req, res)=>{
-    const code = `SELECT * FROM [dbo].[Payslip_Users] WHERE ID='${req.body.id}'`;
-    mssqlQuery(code, (isExist)=>{
-        if(isExist.length){
-            res.send("0");
-        }
-        else{
-            const exec = `INSERT INTO [dbo].[Payslip_Users] VALUES('${req.body.id}', '${req.body.name}', '${req.body.password}')`;
-            try{
-                mssqlQuery(exec, (result)=>{
-                    res.send("1");
-                });
-            }catch(err){
-                console.log(err.message);
-                res.status(404).send("0");
-            }
-        }
-    })
+    isAccountExist(req.body.id, (exist)=>{
+        if(exist == true)
+            return res.send("id_exist");
+    });
+    const exec = `INSERT INTO [dbo].[Payslip_Users] VALUES('${req.body.id}', '${req.body.name}', '${req.body.password}')`;
+    try{
+        mssqlQuery(exec, (result)=>{
+            res.send("1");
+        });
+    }catch(err){
+        console.log(err.message);
+        res.status(404).send("0");
+    }
+});
+
+router.get("/getPayslipList", (req, res)=>{
+    const code = "SELECT DISTINCT [date] FROM [DES].[dbo].[Payslip_Wage]";
+    try{
+        mssqlQuery(code, (result)=>{
+            res.send(result);
+        });
+    }catch(err){
+        res.status(404).send(err.message);
+    }
 });
 
 router.post("/payslip", (req, res)=>{
@@ -150,11 +191,16 @@ router.post("/wage", upload.single("file"), (req, res)=>{
         
         // 读取Excel文件
         const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
-        const sheetName = workbook.SheetNames[0]; // 获取第一个工作表名
-        const worksheet = workbook.Sheets[sheetName];
+        const date = req.body.date;
+        const worksheet = workbook.Sheets[date];
+        if(!worksheet){
+            return res.status(400).json({ 
+                success: false, 
+                message: `工作表 "${date}" 不存在，请检查Excel文件` 
+            });
+        }
         
         // 将工作表转换为JSON
-        const date = req.body.date;
         let data = xlsx.utils.sheet_to_json(worksheet, {raw:false, defval: ""});
         for(let obj of data)    obj["date"] = date;
         const check = `SELECT * FROM [dbo].[Payslip_Wage] WHERE date='${date}'`;
@@ -178,7 +224,6 @@ router.post("/wage", upload.single("file"), (req, res)=>{
                 })
             }
         });
-        // 返回处理后的数据
     } catch (error) {
         console.error('处理Excel文件出错:', error);
         res.status(500).json({ 

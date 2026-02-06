@@ -51,16 +51,17 @@
                 $(".upload-btn").prop("disabled", true).text("上传中...");
 
                 $.ajax({
-                    url: "http://www.dony.cn:5000/wage",
+                    url: "http://0.0.0.0:5000/wage",
                     type: "post",
                     data: form,
                     processData: false,
                     contentType: false,
                     success: (response) => {
-                        window.location.href = "/success.html";
+                        alert("上传成功!");
+                        $(".upload-btn").prop("disabled", false).text("上传工资表");
                     },
-                    error: () => {
-                        alert("上传失败，请稍后重试");
+                    error: (response) => {
+                        alert(response.responseJSON.message);
                         $(".upload-btn").prop("disabled", false).text("上传工资表");
                     }
                 });
@@ -129,7 +130,7 @@
                                 、部门、班组、工种、工号、姓名、入厂日期、基本工资、工龄工资、职务工资、技能工资、岗位补贴、出勤时间、出勤天数、出勤工资、绩效工资、奖金、小计、-保险金、-公积金、-所得税、-其它、
                                 -小计<i style="color: grey;">(注意有减号)</i>、实发工资、身份证号
                             </li>
-                            <li>确保日期格式正确（YYYY-MM-DD）</li>
+                            <li>确保表名格式正确（YYYY-MM）</li>
                             <li>请不要修改原始模板的列结构</li>
                             <li>如上传失败，请检查文件格式和数据完整性</li>
                         </ul>

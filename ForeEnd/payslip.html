@@ -10,11 +10,6 @@
     <script>
         const year = localStorage.getItem("year");
         const month = localStorage.getItem("month");
-        function formatYearMonth(year, month) {
-            // 确保月份是两位数
-            const formattedMonth = month < 10 ? `0${month}` : month;
-            return `${year}-${formattedMonth}`;
-        }
         const title = `
             <h2 class="title">
                 ${year}年${month}月工资条
@@ -23,10 +18,10 @@
         $(document).ready(()=>{
             $("body").before(title);
             $.ajax({
-                url:"http://www.dony.cn:5000/payslip", 
+                url:"http://0.0.0.0:5000/payslip", 
                 type:"post", 
                 data:{
-                    date:formatYearMonth(year, month), 
+                    date:year+'-'+month, 
                     id:localStorage.getItem("id")
                 }, 
                 success:(result)=>{

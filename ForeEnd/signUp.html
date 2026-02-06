@@ -31,8 +31,11 @@
                             alert("注册成功");
                             window.location.href = "/";
                         }
-                        else {
+                        else if(result == "id_exist"){
                             alert("该账户已存在!\n请检查身份证号是否填写错误");
+                        }
+                        else{
+                            alert("注册失败，请稍后再试");
                         }
                     },
                     error: () => {
